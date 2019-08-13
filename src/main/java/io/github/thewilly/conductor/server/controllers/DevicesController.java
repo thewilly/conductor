@@ -1,13 +1,13 @@
 package io.github.thewilly.conductor.server.controllers;
 
+import io.github.thewilly.conductor.server.services.DeviceActionService;
 import io.github.thewilly.conductor.server.services.DevicesService;
 import io.github.thewilly.conductor.server.types.Device;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 public class DevicesController {
@@ -15,9 +15,25 @@ public class DevicesController {
     @Autowired
     DevicesService devicesService;
 
-    @RequestMapping(value = "/devices/register", method = RequestMethod.GET)
-    public Device register(@RequestParam @NotNull String deviceName, @RequestParam @NotNull String deviceLocation) {
-        return this.devicesService.register(deviceName, deviceLocation);
+    @Autowired
+    DeviceActionService devicesActionService;
+
+    @RequestMapping(value = "/devices/register", method = RequestMethod.POST, consumes = {
+            MediaType.APPLICATION_JSON_VALUE })
+    public Device register(@RequestBody Map<String, Object> payload){
+        devicesActionService.recordAction(payload.get("mac").toString(), "Device registered.");
+        return this.devicesService.register(
+                payload.get("deviceName").toString(),
+                payload.get("deviceLocation").toString(),
+                payload.get("mac").toString());
+    }
+
+    @RequestMapping(value = "/devices/register", method = RequestMethod.DELETE, consumes = {
+            MediaType.APPLICATION_JSON_VALUE })
+    public Device unregister(@RequestBody Map<String, Object> payload) {
+        devicesActionService.recordAction(payload.get("deviceToken").toString(), "Device (un)registered.");
+        return this.devicesService.unregister(
+                payload.get("deviceToken").toString());
     }
 
 }
