@@ -16,8 +16,8 @@ class DevicesService {
     @Autowired
     val devicesRepo: DevicesRepository? = null
 
-    fun register(name: String, location: String, mac: String): Device {
-        val newDevice = Device(deviceName = name, location = location, deviceMac = mac, isOff = false)
+    fun register(name: String, location: String, ip:String, mac: String): Device {
+        val newDevice = Device(deviceName = name, location = location, deviceIP = ip, deviceMac = mac, isOff = false)
         val stored: Device? = devicesRepo!!.findByDeviceMac(newDevice.deviceMac)
         if(stored == null) {
             devicesRepo!!.save(newDevice)
@@ -43,7 +43,7 @@ class DevicesService {
         return authDevice
     }
 
-    fun changeListeningChannel( deviceToken: String, newChannel: Channel ) {
+    fun setListeningChannel( deviceToken: String, newChannel: Channel ) {
         val authDevice = devicesRepo!!.findByDeviceToken(deviceToken)
         authDevice.listenningChannel = newChannel;
         devicesRepo.save(authDevice)
@@ -73,5 +73,11 @@ class DevicesService {
         if(authDevice.isOff)
             return "off"
         return "on"
+    }
+
+    fun setDeviceIP(deviceToken: String, deviceIP: String) {
+        val authDevice = devicesRepo!!.findByDeviceToken(deviceToken)
+        authDevice.deviceIP = deviceIP
+        devicesRepo.save(authDevice)
     }
 }

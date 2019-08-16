@@ -1,9 +1,9 @@
-package io.github.thewilly.conductor.server.controllers;
+package io.github.thewilly.conductor.server.controllers.rest;
 
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class ChannelsController {
+public class ChannelsRESTController {
 
     //@RequestMapping( value = "/channels/")
 }

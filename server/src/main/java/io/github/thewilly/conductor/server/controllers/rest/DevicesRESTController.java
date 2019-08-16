@@ -1,4 +1,4 @@
-package io.github.thewilly.conductor.server.controllers;
+package io.github.thewilly.conductor.server.controllers.rest;
 
 import io.github.thewilly.conductor.server.services.DeviceActionService;
 import io.github.thewilly.conductor.server.services.DevicesService;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-public class DevicesController {
+public class DevicesRESTController {
 
     @Autowired
     DevicesService devicesService;
@@ -25,6 +25,7 @@ public class DevicesController {
         return this.devicesService.register(
                 payload.get("deviceName").toString(),
                 payload.get("deviceLocation").toString(),
+                payload.get("deviceIP").toString(),
                 payload.get("mac").toString());
     }
 
