@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository
 
 interface DevicesRepository : MongoRepository<Device, ObjectId> {
 
-    fun findByDeviceToken(token: String): Device
+    fun findByMac(mac: String): Device?
 
-    fun findByDeviceMac(mac: String): Device
 }

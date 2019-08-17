@@ -1,6 +1,6 @@
 package io.github.thewilly.conductor.server.controllers.rest;
 
-import io.github.thewilly.conductor.server.services.DeviceActionService;
+import io.github.thewilly.conductor.server.services.experimental.DeviceActionService;
 import io.github.thewilly.conductor.server.services.DevicesService;
 import io.github.thewilly.conductor.server.types.Device;
 import org.springframework.beans.factory.annotation.Autowired;

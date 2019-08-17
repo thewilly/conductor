@@ -6,13 +6,27 @@ import java.time.Instant
 import java.util.*
 
 @Document(collection = "transmissions")
-data class Transmission(@Id val transmissionId: String? = null, val transmissionDate: Date = Date.from(Instant.now()))
+data class Transmission(@Id val transmissionId: String? = null,
+                        val date: Date = Date.from(Instant.now()))
 
 @Document(collection = "channels")
-data class Channel(@Id val channelId: String? = null, val channelName: String, var frequency: String, var ctcssFrequency: String)
+data class Channel(@Id val channelId: String? = null,
+                   var name: String,
+                   var freq: String,
+                   var ctcss: String)
 
 @Document(collection = "devices")
-data class Device(@Id val deviceId: String? = null, var isOff: Boolean = true, val deviceName: String, val location: String, val deviceMac: String, var deviceIP: String = "0.0.0.0",var listenningChannel: Channel? = null, val deviceToken: String? = Token.builder(), val registeredDate: Date = Date.from(Instant.now()), var lastAuthDate: Date = Date.from(Instant.now()))
+data class Device(@Id val deviceId: String? = null,
+                  val mac: String,
+                  var ip: String,
+                  var channel: Channel ?= null,
+                  var location: String,
+                  var key: String,
+                  var isOn: Boolean = false)
+
+
+/*   EXPERIMENTAL FEATURES   */
+
 
 @Document(collection = "device-actions")
 data class DeviceAction(@Id val deviceActionId: String? = null, val deviceMac: String, val action: String)

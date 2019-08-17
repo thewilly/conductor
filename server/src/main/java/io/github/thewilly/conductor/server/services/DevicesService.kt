@@ -1,13 +1,19 @@
 package io.github.thewilly.conductor.server.services
 
+import io.github.thewilly.conductor.server.getPrivateKeyFromString
 import io.github.thewilly.conductor.server.repositories.DevicesRepository
 import io.github.thewilly.conductor.server.types.Channel
 import io.github.thewilly.conductor.server.types.Device
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.stereotype.Service
-import java.time.Instant
+import io.github.thewilly.conductor.server.getPublicKeyFromString
+import org.apache.commons.lang3.RandomStringUtils
 import java.util.*
+import javax.crypto.Cipher
+import kong.unirest.Unirest
+import org.json.JSONObject
+
 
 @EntityScan
 @Service
@@ -16,68 +22,96 @@ class DevicesService {
     @Autowired
     val devicesRepo: DevicesRepository? = null
 
-    fun register(name: String, location: String, ip:String, mac: String): Device {
-        val newDevice = Device(deviceName = name, location = location, deviceIP = ip, deviceMac = mac, isOff = false)
-        val stored: Device? = devicesRepo!!.findByDeviceMac(newDevice.deviceMac)
+    fun create(mac: String, ip: String = "0.0.0.0", location: String, key: String): Boolean {
+        val newDevice = Device(mac = mac, ip = ip, location = location, key = key)
+        val stored = devicesRepo!!.findByMac(newDevice.mac)
         if(stored == null) {
-            devicesRepo!!.save(newDevice)
-            return newDevice;
+            devicesRepo.save(newDevice)
+            return true;
         }
-        return stored
+        return false;
     }
 
-    fun unregister(deviceToken: String): Device? {
-        val authDevice = devicesRepo!!.findByDeviceToken(deviceToken)
+    fun register(mac:String, ip: String): Boolean {
+        val stored = devicesRepo!!.findByMac(mac)
+        if(stored != null && stored.ip.equals(ip)) {
+
+            // Create a secret
+            val secret = RandomStringUtils.randomAlphanumeric(1024)
+
+            // Encrypt the created secret with the device public key.
+            val cipher = Cipher.getInstance("RSA")
+            cipher.init(Cipher.ENCRYPT_MODE, getPublicKeyFromString(stored.key))
+            val cipherText = cipher.doFinal(secret.toByteArray(Charsets.UTF_8))
+            val encryptedSecret = Base64.getEncoder().encodeToString(cipherText)
+
+            // Send the encrypted secret to the device
+            val payload = JSONObject()
+            payload.put("secret",encryptedSecret)
+            val response = Unirest.post(stored.ip + "/api/register").body(payload).asJson()
+            val returnedSecret = response.body.`object`.get("secret")
+
+            // Decrypt the returned secret
+            cipher.init(Cipher.DECRYPT_MODE, getPrivateKeyFromString(""))
+            val returnedCipheredSecret = cipher.doFinal(secret.toByteArray(Charsets.UTF_8))
+            val returnedUnEncryptedSecret = Base64.getEncoder().encodeToString(returnedCipheredSecret)
+
+            // Compare initial an returned secrets.
+            if(secret.equals(returnedUnEncryptedSecret)) {
+                return true;
+            } else {
+                println("Secret: $secret")
+                println("Received one: $returnedUnEncryptedSecret")
+            }
+        }
+        return false;
+    }
+
+    fun unregister(mac: String): Device? {
+        val authDevice = devicesRepo!!.findByMac(mac)
         if(authDevice != null) {
-            devicesRepo!!.delete(authDevice)
+            devicesRepo.delete(authDevice)
             return authDevice;
         }
 
         return authDevice;
     }
 
-    fun authenticate(deviceToken:String): Device {
-        val authDevice = devicesRepo!!.findByDeviceToken(deviceToken)
-        authDevice.lastAuthDate = Date.from(Instant.now());
-        devicesRepo.save(authDevice)
-        return authDevice
-    }
-
-    fun setListeningChannel( deviceToken: String, newChannel: Channel ) {
-        val authDevice = devicesRepo!!.findByDeviceToken(deviceToken)
-        authDevice.listenningChannel = newChannel;
+    fun setListeningChannel( mac: String, newChannel: Channel ) {
+        val authDevice = devicesRepo!!.findByMac(mac)
+        authDevice!!.channel = newChannel;
         devicesRepo.save(authDevice)
     }
 
-    fun turnOff(deviceToken: String): Boolean {
-        val authDevice = devicesRepo!!.findByDeviceToken(deviceToken)
-        if(authDevice.isOff)
+    fun turnOn(mac: String): Boolean {
+        val authDevice = devicesRepo!!.findByMac(mac)
+        if(authDevice!!.isOn)
             return false
-        authDevice.isOff = true
+        authDevice.isOn = true
         devicesRepo.save(authDevice)
         return true;
     }
 
-    fun turnOn(deviceToken: String): Boolean {
-        val authDevice = devicesRepo!!.findByDeviceToken(deviceToken)
-        if(authDevice.isOff) {
-            authDevice.isOff = false
+    fun turnOff(mac: String): Boolean {
+        val authDevice = devicesRepo!!.findByMac(mac)
+        if(authDevice!!.isOn) {
+            authDevice.isOn = false
             devicesRepo.save(authDevice)
             return true;
         }
         return false;
     }
 
-    fun getDeviceStatus(deviceToken: String): String {
-        val authDevice = devicesRepo!!.findByDeviceToken(deviceToken)
-        if(authDevice.isOff)
-            return "off"
-        return "on"
+    fun getDeviceStatus(mac: String): String {
+        val authDevice = devicesRepo!!.findByMac(mac)
+        if(authDevice!!.isOn)
+            return "on"
+        return "off"
     }
 
-    fun setDeviceIP(deviceToken: String, deviceIP: String) {
-        val authDevice = devicesRepo!!.findByDeviceToken(deviceToken)
-        authDevice.deviceIP = deviceIP
+    fun setDeviceIP(mac: String, deviceIP: String) {
+        val authDevice = devicesRepo!!.findByMac(mac)
+        authDevice!!.ip = deviceIP
         devicesRepo.save(authDevice)
     }
 }

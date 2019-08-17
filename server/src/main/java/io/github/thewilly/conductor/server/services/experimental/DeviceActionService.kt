@@ -1,6 +1,6 @@
-package io.github.thewilly.conductor.server.services
+package io.github.thewilly.conductor.server.services.experimental
 
-import io.github.thewilly.conductor.server.repositories.DeviceActionsRepository
+import io.github.thewilly.conductor.server.repositories.experimental.DeviceActionsRepository
 import io.github.thewilly.conductor.server.types.DeviceAction
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

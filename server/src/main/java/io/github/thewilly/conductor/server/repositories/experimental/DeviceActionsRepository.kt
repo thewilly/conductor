@@ -1,4 +1,4 @@
-package io.github.thewilly.conductor.server.repositories
+package io.github.thewilly.conductor.server.repositories.experimental
 
 import io.github.thewilly.conductor.server.types.DeviceAction
 import org.bson.types.ObjectId
