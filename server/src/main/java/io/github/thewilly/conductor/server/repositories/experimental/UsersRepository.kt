@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository
 
 interface UsersRepository : MongoRepository<User, ObjectId> {
 
-    fun findByUserName(userName: String): User
+    fun findByEmail(email: String): User?
 
 }

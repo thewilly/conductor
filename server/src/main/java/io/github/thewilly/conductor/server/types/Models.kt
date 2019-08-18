@@ -42,13 +42,6 @@ enum class DeviceStatus {
 data class DeviceAction(@Id val deviceActionId: String? = null, val deviceMac: String, val action: String)
 
 @Document(collection = "users")
-data class User(@Id val userId: String? = null, val userName: String, val password: String, val isAdmin : Boolean, var channelsWithAccess: List<Channel>? = null,  var devicesWithAccess: List<Device>? = null) {
+data class User(@Id val userId: String? = null, val email: String, val password: String)
 
-    fun canAccessToChannel(channel: Channel): Boolean {
-        return channelsWithAccess!!.contains(channel)
-    }
-
-    fun canAccessToDevice(device: Device): Boolean {
-        return devicesWithAccess!!.contains(device)
-    }
-}
+data class LoginInfo(val email: String, val password: String)
