@@ -4,6 +4,7 @@ import io.github.thewilly.conductor.server.services.experimental.UsersService
 import io.github.thewilly.conductor.server.types.LoginInfo
 import io.github.thewilly.conductor.server.types.User
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.lang.Nullable
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod
 
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
+import org.springframework.web.bind.annotation.CookieValue
+
+
 
 @Controller
 class UsersController {
@@ -22,6 +26,11 @@ class UsersController {
 
     @RequestMapping("/")
     fun index(): String {
+        return "login"
+    }
+
+    @RequestMapping("/login")
+    fun login(): String {
         return "login"
     }
 
@@ -37,5 +46,15 @@ class UsersController {
             return "redirect:/devices"
         }
         return "login"
+    }
+
+    @RequestMapping( "/logout", method = [RequestMethod.GET])
+    fun logout(@Nullable @CookieValue("bmnUserEmail") sessionCookie: String?, response: HttpServletResponse): String {
+        if (sessionCookie == null)
+            return "redirect:/login"
+        val cookie = Cookie("bmnUserEmail", sessionCookie)
+        cookie.maxAge = 0
+        response.addCookie(cookie)
+        return "redirect:/"
     }
 }
