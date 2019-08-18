@@ -2,6 +2,7 @@ package io.github.thewilly.conductor.server.types
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
+import java.awt.geom.Point2D
 import java.time.Instant
 import java.util.*
 
@@ -17,12 +18,21 @@ data class Channel(@Id val channelId: String? = null,
 
 @Document(collection = "devices")
 data class Device(@Id val deviceId: String? = null,
-                  val mac: String,
-                  var ip: String,
+                  val imsi: String,
+                  val publicKey: String,
+                  var ip: String = "0.0.0.0",
                   var channel: Channel ?= null,
-                  var location: String,
-                  var key: String,
-                  var isOn: Boolean = false)
+                  var location: Point2D.Float = Point2D.Float(),
+                  var isRegistered: Boolean = false,
+                  var status: DeviceStatus = DeviceStatus.OFF)
+
+enum class DeviceStatus {
+    STAND_BY,
+    TX,
+    RX,
+    UPDATING,
+    OFF
+}
 
 
 /*   EXPERIMENTAL FEATURES   */

@@ -13,7 +13,7 @@ class ChannelsService {
     val channelsRepo: ChannelsRepository? = null
 
     fun create(name:String, freq:String, ctcss:String): Boolean {
-        if(channelsRepo!!.findByChannelName(name) != null) {
+        if(channelsRepo!!.findByName(name) != null) {
             return false;
         }
         channelsRepo!!.save(Channel(name = name, freq = freq, ctcss = ctcss))
@@ -21,20 +21,20 @@ class ChannelsService {
     }
 
     fun changeName(channelName: String, name: String) {
-        val storedChannel = channelsRepo!!.findByChannelName(channelName)
+        val storedChannel = channelsRepo!!.findByName(channelName)
         storedChannel.name = name;
         channelsRepo.save(storedChannel)
     }
 
     fun changeFreq(channelName: String, freq: String, ctcssFreq: String) {
-        val storedChannel = channelsRepo!!.findByChannelName(channelName)
+        val storedChannel = channelsRepo!!.findByName(channelName)
         storedChannel.freq = freq;
         storedChannel.ctcss = ctcssFreq;
         channelsRepo!!.save(storedChannel);
     }
 
     fun remove(channelName: String) {
-        val storedChannel = channelsRepo!!.findByChannelName(channelName)
+        val storedChannel = channelsRepo!!.findByName(channelName)
         channelsRepo.delete(storedChannel)
     }
 }

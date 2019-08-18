@@ -15,14 +15,14 @@ import org.apache.commons.codec.binary.Base64;
 
 
 @SpringBootApplication
-open class StartUp {
+open class StartUp
 
     val publicKey: String = ""
 
     fun main(args: Array<String>) {
         SpringApplication.run(StartUp::class.java, *args)
     }
-}
+
 
 @Throws(IOException::class, GeneralSecurityException::class)
 fun getPrivateKeyFromString(key:String): RSAPrivateKey {

@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository
 
 interface DevicesRepository : MongoRepository<Device, ObjectId> {
 
-    fun findByMac(mac: String): Device?
+    fun findByImsi(imsi: String): Device?
 
 }

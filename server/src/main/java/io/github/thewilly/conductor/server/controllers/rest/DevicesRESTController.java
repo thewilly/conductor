@@ -20,13 +20,9 @@ public class DevicesRESTController {
 
     @RequestMapping(value = "/devices/register", method = RequestMethod.POST, consumes = {
             MediaType.APPLICATION_JSON_VALUE })
-    public Device register(@RequestBody Map<String, Object> payload){
+    public Boolean register(@RequestBody Map<String, Object> payload){
         devicesActionService.recordAction(payload.get("mac").toString(), "Device registered.");
-        return this.devicesService.register(
-                payload.get("deviceName").toString(),
-                payload.get("deviceLocation").toString(),
-                payload.get("deviceIP").toString(),
-                payload.get("mac").toString());
+        return this.devicesService.register(payload.get("mac").toString(), payload.get("ip").toString());
     }
 
     @RequestMapping(value = "/devices/register", method = RequestMethod.DELETE, consumes = {
