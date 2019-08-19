@@ -37,4 +37,8 @@ class ChannelsService {
         val storedChannel = channelsRepo!!.findByName(channelName)
         channelsRepo.delete(storedChannel)
     }
+
+    fun numberOfChannels(): Int {
+        return channelsRepo!!.findAll().size
+    }
 }

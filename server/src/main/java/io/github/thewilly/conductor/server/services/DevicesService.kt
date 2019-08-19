@@ -38,6 +38,21 @@ class DevicesService {
         return devicesRepo!!.findAll()
     }
 
+    fun numberOfDevices(): Int {
+        return this.getAllDevices().size
+    }
+
+    fun numberOfRegisteredDevices(): Int {
+        return devicesRepo!!.findByIsRegistered(true)!!.size
+    }
+
+    fun numberOfActiveDevices(): Int {
+        return devicesRepo!!.findByStatus(DeviceStatus.STAND_BY)!!.size
+        + devicesRepo!!.findByStatus(DeviceStatus.RX)!!.size
+        + devicesRepo!!.findByStatus(DeviceStatus.TX)!!.size
+        + devicesRepo!!.findByStatus(DeviceStatus.UPDATING)!!.size
+    }
+
     fun register(imsi:String, ip: String): Boolean {
         val stored = devicesRepo!!.findByImsi(imsi)
         if(stored != null && stored.ip.equals(ip)) {

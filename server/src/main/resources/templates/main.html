@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/head"/>
+
+<body>
+<nav th:replace="fragments/nav"/>
+<div class="container">
+    <div class="container">
+        <h2>Resources</h2>
+        <table>
+        <tr>
+            <td><a class="gwt-Anchor" href="/devices" th:text="${totalDevices +' Devices'}"> Devices</a></td>
+            <td><a class="gwt-Anchor" href="/devices:" th:text="${registeredDevices +' Registered Devices'}"> Registered Devices</a></td>
+        </tr>
+        <tr>
+            <td><a class="gwt-Anchor" href="/devices" th:text="${activeDevices  +' Active Devices'}"> Active Devices</a></td>
+            <td><a class="gwt-Anchor" href="/devices:" th:text="${totalChannels  +' Channels'}"> Channels</a></td>
+        </tr>
+        </table>
+    </div>
+</div>
+<footer th:replace="fragments/footer"/>
+</body>
+
+</html>

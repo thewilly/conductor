@@ -1,5 +1,7 @@
 package io.github.thewilly.conductor.server.controllers.web
 
+import io.github.thewilly.conductor.server.services.ChannelsService
+import io.github.thewilly.conductor.server.services.DevicesService
 import io.github.thewilly.conductor.server.services.experimental.UsersService
 import io.github.thewilly.conductor.server.types.LoginInfo
 import io.github.thewilly.conductor.server.types.User
@@ -24,9 +26,22 @@ class UsersController {
     @Autowired
     internal var usersService: UsersService? = null
 
+    @Autowired
+    internal var devicesService: DevicesService? = null
+
+    @Autowired
+    internal var channelsService: ChannelsService? = null
+
     @RequestMapping("/")
-    fun index(): String {
-        return "login"
+    fun index(model: Model, @Nullable @CookieValue("bmnUserEmail") sessionCookie: String?, response: HttpServletResponse): String {
+        if (sessionCookie == null)
+            return "redirect:/login"
+
+        model.addAttribute("totalDevices", devicesService!!.numberOfDevices())
+        model.addAttribute("registeredDevices", devicesService!!.numberOfRegisteredDevices())
+        model.addAttribute("activeDevices", devicesService!!.numberOfActiveDevices())
+        model.addAttribute("totalChannels", channelsService!!.numberOfChannels())
+        return "main"
     }
 
     @RequestMapping("/login")
@@ -43,7 +58,7 @@ class UsersController {
             userSession.maxAge = 1000
             response.addCookie(userSession)
 
-            return "redirect:/devices"
+            return "redirect:/"
         }
         return "login"
     }
