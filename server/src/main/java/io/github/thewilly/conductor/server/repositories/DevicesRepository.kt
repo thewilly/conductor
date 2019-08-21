@@ -13,4 +13,6 @@ interface DevicesRepository : MongoRepository<Device, ObjectId> {
 
     fun findByIsRegistered(isRegistered: Boolean): List<Device>?
 
+    fun findByDeviceId(deviceId: String): Device?
+
 }

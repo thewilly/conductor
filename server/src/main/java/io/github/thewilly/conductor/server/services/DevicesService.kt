@@ -24,6 +24,10 @@ class DevicesService {
     @Autowired
     val devicesRepo: DevicesRepository? = null
 
+    fun remove(deviceId: String) {
+        devicesRepo!!.delete(devicesRepo!!.findByDeviceId(deviceId))
+    }
+
     fun create(imsi: String, ip: String = "0.0.0.0", location: Point2D.Float, key: String): Boolean {
         val newDevice = Device(imsi = imsi, ip = ip, location = location, publicKey = key)
         val stored = devicesRepo!!.findByImsi(newDevice.imsi)
@@ -32,6 +36,14 @@ class DevicesService {
             return true;
         }
         return false;
+    }
+
+    fun create(imsi: String, publicKey: String) {
+        val newDevice = Device(imsi = imsi, publicKey = publicKey)
+        val stored = devicesRepo!!.findByImsi(newDevice.imsi)
+        if(stored == null) {
+            devicesRepo.save(newDevice)
+        }
     }
 
     fun getAllDevices(): List<Device> {

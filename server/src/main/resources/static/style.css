@@ -229,6 +229,7 @@ h2 {
 .pull-right {
     display: block!important;
     float: right!important;
+    margin-top: -10px;
 }
 
 .hero-label {

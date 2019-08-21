@@ -6,13 +6,16 @@
 <nav th:replace="fragments/nav" />
 <div class="container">
     <div class="container">
-        <h2>All devices</h2>
+        <h2>All devices
+            <a class="pull-right btn btn-primary" href="/devices/new">Create new device</a></h2>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
                 <tr>
                     <form class="navbar-form" th:action="${'?${searchtext}'}">
-                        <td colspan="5" class="awstable-seach"><input th:name="searchtext" th:value="${searchtext}" type="text" class="form-control" placeholder="Search by title, description or status"></td>
+                        <td colspan="5" class="awstable-seach">
+                            <input th:name="searchtext" th:value="${searchtext}" type="text" class="form-control" placeholder="Search by title, description or status">
+                        </td>
                     </form>
                 </tr>
                 </thead>
@@ -23,14 +26,17 @@
                     <th>Channel</th>
                     <th>Status</th>
                     <th class="col-md-1"></th>
+                    <th class="col-md-1"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="device : ${devices}">
                     <td th:text="${device.imsi}" class="awstable-shorttext">Fire at the petrol station</td>
-                    <td th:text="${device.ip}" class="awstable-longtext">There is fire at the petros station lalalalalalalalallalalalalalallala long textisadbhf ksadhjfliszhniasdhgpierahgñanvpiu9aerhganfvàiehrg98hgñkadjshg98erhgpiuhgopahgvp9qerhg</td>
+                    <td th:text="${device.ip}" class="awstable-shorttext"></td>
+                    <td th:text="${device.channel}" class="awstable-shorttext"></td>
                     <td th:text="${device.status}">OPEN</td>
-                    <td><a th:href="${'/incidents/' + incident.incidentId}" class="awstable-button">Detalles</a></td>
+                    <td><a th:href="${'/devices/' + device.deviceId}" class="awstable-button">Details</a></td>
+                    <td><a th:href="${'/devices/remove/' + device.deviceId}" class="awstable-button">Remove</a></td>
                 </tr>
                 </tbody>
             </table>

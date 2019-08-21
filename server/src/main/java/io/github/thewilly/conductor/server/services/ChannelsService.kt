@@ -22,23 +22,27 @@ class ChannelsService {
 
     fun changeName(channelName: String, name: String) {
         val storedChannel = channelsRepo!!.findByName(channelName)
-        storedChannel.name = name;
+        storedChannel!!.name = name;
         channelsRepo.save(storedChannel)
     }
 
     fun changeFreq(channelName: String, freq: String, ctcssFreq: String) {
         val storedChannel = channelsRepo!!.findByName(channelName)
-        storedChannel.freq = freq;
-        storedChannel.ctcss = ctcssFreq;
+        storedChannel!!.freq = freq;
+        storedChannel!!.ctcss = ctcssFreq;
         channelsRepo!!.save(storedChannel);
     }
 
-    fun remove(channelName: String) {
-        val storedChannel = channelsRepo!!.findByName(channelName)
+    fun remove(channelId: String) {
+        val storedChannel = channelsRepo!!.findByChannelId(channelId)
         channelsRepo.delete(storedChannel)
     }
 
     fun numberOfChannels(): Int {
         return channelsRepo!!.findAll().size
+    }
+
+    fun getAllChannels(): List<Channel> {
+        return channelsRepo!!.findAll()
     }
 }

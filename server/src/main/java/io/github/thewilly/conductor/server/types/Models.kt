@@ -45,3 +45,5 @@ data class DeviceAction(@Id val deviceActionId: String? = null, val deviceMac: S
 data class User(@Id val userId: String? = null, val email: String, val password: String)
 
 data class LoginInfo(val email: String, val password: String)
+data class ChannelInfo(val name: String, val freq: String, val ctcss: String)
+data class DeviceInfo(val imsi: String, val publicKey: String)

@@ -6,5 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository
 
 interface ChannelsRepository : MongoRepository<Channel, ObjectId> {
 
-    fun findByName(name: String): Channel
+    fun findByName(name: String): Channel?
+
+    fun findByChannelId(channelId: String): Channel?
 }
