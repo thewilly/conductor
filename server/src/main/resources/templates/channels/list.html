@@ -28,7 +28,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="channel : ${channels}">
-                    <td th:text="${channel.name}" class="awstable-shorttext">Fire at the petrol station</td>
+                    <td th:text="${channel.name}" class="awstable-shorttext" th:classappend="${channel.freq < '200.000'} ? vhf-channel : uhf-channel">Fire at the petrol station</td>
                     <td th:text="${channel.freq}" class="awstable-longtext">There is fire at the petros station lalalalalalalalallalalalalalallala long textisadbhf ksadhjfliszhniasdhgpierahgñanvpiu9aerhganfvàiehrg98hgñkadjshg98erhgpiuhgopahgvp9qerhg</td>
                     <td th:text="${channel.ctcss}">OPEN</td>
                     <td><a th:href="${'/channels/' + channel.channelId}" class="awstable-button">Details</a></td>
