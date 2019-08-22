@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/head"/>
+
+<body>
+<nav th:replace="fragments/nav"/>
+<div class="toolbox">
+    <button class="toolbox-button">Beacon
+        <div class="on-bar">ON</div>
+    </button>
+    <button class="toolbox-button">Lock
+        <div class="off-bar">OFF</div>
+    </button>
+    <button class="toolbox-button">Hold
+        <div class="on-bar">ON</div>
+    </button>
+</div>
+<footer th:replace="fragments/footer"/>
+</body>
+<script>
+    $(document).ready(function () {
+        $('#controls a:first').addClass('active');
+    });
+</script>
+
+</html>

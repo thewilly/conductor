@@ -55,4 +55,20 @@ public class ChannelsController {
         return "redirect:/channels";
     }
 
+    @RequestMapping( value = "/channelsevent/listen/{id}", method = RequestMethod.GET)
+    public String selectChannel(@PathVariable String id, @Nullable @CookieValue("bmnUserEmail") String sessionCookie) {
+        if (sessionCookie == null)
+            return "redirect:/login";
+        channelsService.listen(id);
+        return "redirect:/channels";
+    }
+
+    @RequestMapping( value = "/controls", method = RequestMethod.GET)
+    public String getControls(Model model, @Nullable @CookieValue("bmnUserEmail") String sessionCookie) {
+        if (sessionCookie == null)
+            return "redirect:/login";
+
+        return "controls";
+    }
+
 }

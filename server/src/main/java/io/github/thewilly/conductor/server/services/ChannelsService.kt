@@ -45,4 +45,13 @@ class ChannelsService {
     fun getAllChannels(): List<Channel> {
         return channelsRepo!!.findAll()
     }
+
+    fun listen(channelId: String) {
+        val storedChannel = channelsRepo!!.findByChannelId(channelId)
+        if(storedChannel!!.selectedOnScreen)
+            storedChannel!!.selectedOnScreen = false;
+        else
+            storedChannel!!.selectedOnScreen = true
+        channelsRepo!!.save(storedChannel);
+    }
 }

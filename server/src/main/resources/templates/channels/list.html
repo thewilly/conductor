@@ -1,48 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<head th:replace="fragments/head" />
+<head th:replace="fragments/head"/>
 
 <body>
-<nav th:replace="fragments/nav" />
+<nav th:replace="fragments/nav"/>
 <div class="container">
-    <div class="container">
-        <h2>Channels
+    <h2>Channels
         <a class="pull-right btn btn-primary" href="/channels/new">Create new channel</a></h2>
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <form class="navbar-form" th:action="${'?${searchtext}'}">
-                        <td colspan="5" class="awstable-seach"><input th:name="searchtext" th:value="${searchtext}" type="text" class="form-control" placeholder="Search by channel name"></td>
-                    </form>
-                </tr>
-                </thead>
-                <thead>
-                <tr>
-                    <th>Channel name</th>
-                    <th>Frequency</th>
-                    <th>CTCSS</th>
-                    <th class="col-md-1"></th>
-                    <th class="col-md-1"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="channel : ${channels}">
-                    <td th:text="${channel.name}" class="awstable-shorttext" th:classappend="${channel.freq < '200.000'} ? vhf-channel : uhf-channel">Fire at the petrol station</td>
-                    <td th:text="${channel.freq}" class="awstable-longtext">There is fire at the petros station lalalalalalalalallalalalalalallala long textisadbhf ksadhjfliszhniasdhgpierahgñanvpiu9aerhganfvàiehrg98hgñkadjshg98erhgpiuhgopahgvp9qerhg</td>
-                    <td th:text="${channel.ctcss}">OPEN</td>
-                    <td><a th:href="${'/channels/' + channel.channelId}" class="awstable-button">Details</a></td>
-                    <td><a th:href="${'/channels/remove/' + channel.channelId}" class="awstable-button">Remove</a></td>
-                </tr>
-                </tbody>
-            </table>
+
+    <div class="channels-pane">
+        <div th:each="channel : ${channels}">
+            <div class="channel-pane" th:classappend="${channel.selectedOnScreen} ? channel-pane-active : channel-pane"
+                 th:onclick="'window.location.href = \'' + @{/channelsevent/listen/{id}(id=${channel.channelId})} + '\''">
+                <p class="channel-pane-name" th:text="${channel.name}">CANAL 16</p>
+                <p class="channel-pane-freq" th:text="${channel.freq}">400.000</p>
+                <p class="channel-pane-ctcss" th:text="${channel.ctcss}">71.9</p>
+                <div class="channel-pane-band"
+                     th:classappend="${channel.freq < '200.000'} ? channel-pane-band-vhf : channel-pane-band-uhf"
+                     th:text="${channel.freq < '200.000'} ? VHF : UHF"></div>
+                <a class="color-inherit" th:href="@{/channels/{id}(id=${channel.channelId})}"><i class="channel-pane-icon fas fa-cogs"></i></a>
+            </div>
         </div>
     </div>
 </div>
-<footer th:replace="fragments/footer" />
+<footer th:replace="fragments/footer"/>
 </body>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#listAllChannels a:first').addClass('active');
     });
 </script>

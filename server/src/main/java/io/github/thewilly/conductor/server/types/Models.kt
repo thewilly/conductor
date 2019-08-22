@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.awt.geom.Point2D
 import java.time.Instant
 import java.util.*
+import kotlin.collections.HashMap
 
 @Document(collection = "transmissions")
 data class Transmission(@Id val transmissionId: String? = null,
@@ -14,7 +15,9 @@ data class Transmission(@Id val transmissionId: String? = null,
 data class Channel(@Id val channelId: String? = null,
                    var name: String,
                    var freq: String,
-                   var ctcss: String)
+                   var ctcss: String,
+                   var selectedOnScreen: Boolean = false,
+                   var attributes: Map<String, Object> = HashMap<String, Object>())
 
 @Document(collection = "devices")
 data class Device(@Id val deviceId: String? = null,
