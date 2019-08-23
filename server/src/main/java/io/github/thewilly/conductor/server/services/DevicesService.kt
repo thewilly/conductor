@@ -70,22 +70,23 @@ class DevicesService {
         if(stored != null && stored.ip.equals(ip)) {
 
             // Create a secret
-            val secret = RandomStringUtils.randomAlphanumeric(512)
+            val secret = RandomStringUtils.randomAlphanumeric(16)
 
             // Encrypt the created secret with the device public key.
             val cipher = Cipher.getInstance("RSA")
             cipher.init(Cipher.ENCRYPT_MODE, getPublicKeyFromString(stored.publicKey))
             val cipherText = cipher.doFinal(secret.toByteArray(Charsets.UTF_8))
             val encryptedSecret = Base64.getEncoder().encodeToString(cipherText)
+            println(encryptedSecret)
 
             // Send the encrypted secret to the device
             val payload = JSONObject()
             payload.put("secret",encryptedSecret)
-            val response = Unirest.post(stored.ip + "/api/register").body(payload).asJson()
+            val response = Unirest.post( "http://localhost:8081/api/register").body(payload).asJson()
             val returnedSecret = response.body.`object`.get("secret")
 
             // Decrypt the returned secret
-            cipher.init(Cipher.DECRYPT_MODE, getPrivateKeyFromString(""))
+            cipher.init(Cipher.DECRYPT_MODE, getPrivateKeyFromString("MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAMC1HR5qKz18E37TrhwqHJEY7G+oVkTpRX/5RksHWe+JPmvtsXtgPEozxLsP63hj8iXlzA8KWE6aldAWH3U+jFeyX9Uc18K3U5xb6lf5JjW6CqcqhTnczaxafrK+23SJ1YjCuwA3L4clQaf1b68VZRIu1gsqe0n8cq0k06ehaWzNAgMBAAECgYEAi5LiK0REWz0BtctFgNqzZBhELz8idLjsAJugYPlLF2Y1EuDOuohiQnAqXj5Skxj4qqA84uvgN9ZZCaTsVfPemuc9UKv7Vgpbc6nc6uhDWhXb8MgebORYsMv/h2oO07AGJEiihRa7hyltJovEVrjSW2307bN++lQfMS9OdULeOoECQQDwBz+Rt3W/MLcYUUeEAsyXtqXX9UQDKUxBoaK1EYrlBY+Y5y++Pz3xhHJD3QAclrmKB+ffzuX0dlknrFq8eAmtAkEAzYfH3FDQA/He/tTKQMeP7+rmDHXMO16Xe1YqSg2Tz75MTRQbwUkMUtyX0X7+3yDkv0Xx2CfOBKqAH9K0Y3GToQJBAIHKiZdT6vm9b+RYXyGFGfiXrUn/uA01kaSTsJXUrJR201VM/cYUEHy+r8L+iAbtgdqft8SP7kyoikEns9Dh3+kCQHjv859lAfHASeoDBfu2MbEHtFQSoJkyoMoXOo0WjipInJciRO6n8BN17/N62bgrn84Y9ySsz2IZfYi8MB7vvuECQQDdzrosAsEqaNHTo+784HUP/2lvTvU/1OVAhnLa5iS7x7zKw8zth7D2+z8EBdaxbJefl0HdEb0rcEPc1fxbRvbw"))
             val returnedCipheredSecret = cipher.doFinal(secret.toByteArray(Charsets.UTF_8))
             val returnedUnEncryptedSecret = Base64.getEncoder().encodeToString(returnedCipheredSecret)
 

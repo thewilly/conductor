@@ -14,5 +14,5 @@ data class SimCard(val imsi: String, val keyPair: KeyPair)
  *
  */
 data class SDCard(val route: String) {
-    var memoryMap: Map<String, String>? = null;
+    var memmoryMap: Map<String, String>? = null;
 }
