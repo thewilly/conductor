@@ -8,7 +8,7 @@ data class KeyPair(val publicKey: String, val privateKey: String)
 /**
  *
  */
-data class SimCard(val imsi: String, val keyPair: KeyPair)
+data class SimCard(val imsi: String, val challenge: String)
 
 /**
  *

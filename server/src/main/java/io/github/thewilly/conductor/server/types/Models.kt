@@ -1,5 +1,6 @@
 package io.github.thewilly.conductor.server.types
 
+import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.awt.geom.Point2D
@@ -22,7 +23,7 @@ data class Channel(@Id val channelId: String? = null,
 @Document(collection = "devices")
 data class Device(@Id val deviceId: String? = null,
                   val imsi: String,
-                  val publicKey: String,
+                  val secret: String = RandomStringUtils.randomAlphanumeric(16),
                   var ip: String = "0.0.0.0",
                   var channel: Channel ?= null,
                   var location: Point2D.Float = Point2D.Float(),

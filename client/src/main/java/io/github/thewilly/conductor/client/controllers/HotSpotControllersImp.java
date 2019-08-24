@@ -10,9 +10,8 @@ import java.util.Map;
 @RestController
 public class HotSpotControllersImp {
 
-    @RequestMapping(value = "/api/register", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> register(@RequestBody Map<String, Object> payload) {
-
-        return new RegistrationProtocol(payload.get("secret").toString()).init();
+    @RequestMapping(value = "/api/register", method = RequestMethod.GET)
+    public ResponseEntity<String> register() {
+        return new RegistrationProtocol().init();
     }
 }
