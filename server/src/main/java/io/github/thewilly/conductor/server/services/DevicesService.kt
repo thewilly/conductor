@@ -1,6 +1,5 @@
 package io.github.thewilly.conductor.server.services
 
-import io.github.thewilly.conductor.server.getPrivateKeyFromString
 import io.github.thewilly.conductor.server.repositories.DevicesRepository
 import io.github.thewilly.conductor.server.types.Channel
 import io.github.thewilly.conductor.server.types.Device
