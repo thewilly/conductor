@@ -1,50 +1,30 @@
 package io.github.thewilly.conductor.client;
 
-import io.github.thewilly.conductor.client.types.*;
-import kong.unirest.Unirest;
-import org.json.JSONObject;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
+import io.github.thewilly.conductor.client.hardware.RaspberryPi;
+import io.github.thewilly.conductor.client.hardware.RaspberryPiOperations;
+import io.micronaut.runtime.Micronaut;
 
 import java.io.IOException;
+import java.util.Scanner;
 
-
-@SpringBootApplication
 public class StartUp {
 
-    public static SDCard SD_CARD = new SDCard("");
-    /*public static SimCard SIM =
-            new SimCard(SD_CARD.getMemmoryMap().get("imsi"),
-                    new KeyPair(SD_CARD.getMemmoryMap().get("public_key"),
-                                SD_CARD.getMemmoryMap().get("public_key")));*/
-
-    public static SimCard SIM =
-            new SimCard("8944502802190670052","1234567891234567");
-
-    public static HotSpot HOT_SPOT = new HotSpot(SIM);
+    public static RaspberryPiOperations rPi = new RaspberryPi();
 
     public static void main(String... args) throws IOException {
-        SpringApplication.run(StartUp.class, args);
 
-        JSONObject payload = new JSONObject();
-        payload.put("imsi",HOT_SPOT.getSIM().getImsi());
-        payload.put("ip","localhost:8080");
+        Scanner in = new Scanner(System.in);
 
-        StringEntity entity = new StringEntity(payload.toString(),
-                ContentType.APPLICATION_FORM_URLENCODED);
+        if(rPi.getConfiguration().getProperty("configured") == null) {
+            System.out.print("IMSI: ");
+            String imsi = in.nextLine();
+            System.out.print("\nMaster server IP: ");
+            String ip = in.nextLine();
 
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost("http://" + MasterServer.address + "/api/register");
-        request.setEntity(entity);
+            rPi.getConfiguration().setProperty("imsi", imsi);
+            rPi.getConfiguration().setProperty("masterIP", ip);
+        }
 
-        HttpResponse response = httpClient.execute(request);
-        System.out.println(response);
+        //Micronaut.run(RaspberryPi.class);
     }
 }
